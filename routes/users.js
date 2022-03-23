@@ -3,21 +3,49 @@ const router = express.Router();
 const User = require("../models/user");
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+var captchaLib = require("nodejs-captcha");
+var captchaValue = null;
+
 //login handle
 router.get('/login',(req,res)=>{
-    res.render('login');
+	var captcha = captchaLib();
+	captchaValue = captcha.value
+	
+    res.render('login', {
+		captchaSource: captcha.image
+	});
 })
+
+//Register handle
 router.get('/register',(req,res)=>{
     res.render('register')
-    })
-//Register handle
-router.post('/login',(req,res,next)=>{
-passport.authenticate('local',{
-    successRedirect : '/dashboard',
-    failureRedirect: '/users/login',
-    failureFlash : true
-})(req,res,next)
 })
+
+// login post handle
+router.post('/login',(req,res,next)=>{
+	const {captchaInput} = req.body;
+	console.log('Captcha input ' + captchaInput + ' | Actual value :' + captchaValue);
+	
+	if (captchaInput == captchaValue) {
+		passport.authenticate('local',{
+			successRedirect : '/dashboard',
+			failureRedirect: '/users/login',
+			failureFlash : true
+		})
+		(req,res,next)
+	} else {
+		var errors = [];
+		var captcha = captchaLib();
+		captchaValue = captcha.value
+		
+		errors.push({msg : "Captcha incorrect, please try again."})
+		res.render('login', {
+        errors : errors,
+		captchaSource: captcha.image})
+		
+	}
+})
+
   //register post handle
   router.post('/register',(req,res)=>{
     const {name,email, password, password2} = req.body;

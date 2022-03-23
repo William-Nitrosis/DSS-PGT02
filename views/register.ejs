@@ -175,10 +175,11 @@
 	</ul>
 	
 	<h1>Secure Authentication System</h1>
-	<h2><%- include ('./partials/messages') %></h2>
+	
 	
 	<div class="main">
 		<p class="sign" align="center">Create an account</p>
+		<div align="center"><%- include ('./partials/messages') %></div>
 		
 		<form class="form1" action="/users/register" method="POST">
 			<input class="un " type="name" align="center" name="name" placeholder="Enter Name" value="<%= typeof name != 'undefined' ? name : '' %>" />

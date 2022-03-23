@@ -9,6 +9,7 @@ const passport = require("passport");
 
 //passport config:
 require('./config/passport')(passport)
+
 //mongoose
 mongoose.connect('mongodb://localhost/test',{useNewUrlParser: true, useUnifiedTopology : true})
 .then(() => console.log('connected,,'))
@@ -17,14 +18,17 @@ mongoose.connect('mongodb://localhost/test',{useNewUrlParser: true, useUnifiedTo
 //EJS
 app.set('view engine','ejs');
 app.use(expressEjsLayout);
+
 //BodyParser
 app.use(express.urlencoded({extended : false}));
+
 //express session
 app.use(session({
     secret : 'secret',
     resave : true,
     saveUninitialized : true
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
