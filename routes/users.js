@@ -18,7 +18,12 @@ router.get('/login',(req,res)=>{
 
 //Register handle
 router.get('/register',(req,res)=>{
-    res.render('register')
+	var captcha = captchaLib();
+	captchaValue = captcha.value
+	
+    res.render('register', {
+		captchaSource: captcha.image
+	})
 })
 
 // login post handle
@@ -39,19 +44,24 @@ router.post('/login',(req,res,next)=>{
 		captchaValue = captcha.value
 		
 		errors.push({msg : "Captcha incorrect, please try again."})
+		
 		res.render('login', {
-        errors : errors,
-		captchaSource: captcha.image})
+			errors : errors,
+			captchaSource: captcha.image
+		})
 		
 	}
 })
 
   //register post handle
   router.post('/register',(req,res)=>{
-    const {name,email, password, password2} = req.body;
+    const {name,email, password, password2, captchaInput} = req.body;
     let errors = [];
+	
     console.log(' Name ' + name+ ' email :' + email+ ' pass:' + password);
-    if(!name || !email || !password || !password2) {
+	console.log('Captcha input ' + captchaInput + ' | Actual value :' + captchaValue);
+	
+    if(!name || !email || !password || !password2 || !captchaInput) {
         errors.push({msg : "Please fill in all fields"})
     }
     //check if match
@@ -63,13 +73,24 @@ router.post('/login',(req,res,next)=>{
     if(password.length < 6 ) {
         errors.push({msg : 'password atleast 6 characters'})
     }
+	
+	// check captcha
+	if (captchaInput != captchaValue) {
+		errors.push({msg : "Captcha incorrect, please try again."})
+	}
+	
     if(errors.length > 0 ) {
-    res.render('register', {
-        errors : errors,
-        name : name,
-        email : email,
-        password : password,
-        password2 : password2})
+		var captcha = captchaLib();
+		captchaValue = captcha.value
+		
+		res.render('register', {
+			errors : errors,
+			name : name,
+			email : email,
+			password : password,
+			password2 : password2,
+			captchaSource: captcha.image
+		})
      } else {
         //validation passed
        User.findOne({email : email}).exec((err,user)=>{
