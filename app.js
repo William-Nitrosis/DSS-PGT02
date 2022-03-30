@@ -12,8 +12,15 @@ require('./config/passport')(passport)
 
 //mongoose
 mongoose.connect('mongodb://localhost/test',{useNewUrlParser: true, useUnifiedTopology : true})
-.then(() => console.log('connected,,'))
-.catch((err)=> console.log(err));
+	.then(() => console.log('connected to DB'))
+	.catch((err)=> console.log(err));
+
+//Get the default connection
+var db = mongoose.connection;
+
+//Bind connection to error event (to get notification of connection errors)
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 
 //EJS
 app.set('view engine','ejs');
