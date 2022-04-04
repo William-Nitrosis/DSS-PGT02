@@ -43,7 +43,7 @@ router.post('/sign-up-2fa', (req, res) => {
 		return res.redirect('/')
 	}
 
-	const sessionEmail = req.session.email,
+	const sessionEmail = req.session.email
 	code = req.body.code
 	
 	console.log(code)
@@ -53,7 +53,6 @@ router.post('/sign-up-2fa', (req, res) => {
 		console.log('%s', user.secret)
 		var qrSecret = user.secret
 	})
-	
 	
 	
 	if (authenticator.check(code, qrSecret)) {
