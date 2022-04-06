@@ -92,8 +92,8 @@ router.post('/login',(req,res,next)=>{
 	}
 })
 
-  //register post handle
-  router.post('/register',(req,res)=>{
+// Register post handle
+router.post('/register',(req,res)=>{
     const {name,email, password, password2, captchaInput} = req.body;
     let errors = [];
 	
@@ -177,6 +177,7 @@ router.post('/login',(req,res,next)=>{
        })
     }
     })
+
 //logout
 router.get('/logout',(req,res)=>{
 req.logout();
