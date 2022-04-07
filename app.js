@@ -43,4 +43,10 @@ app.use((req,res,next)=> {
 app.use('/',require('./routes/index'));
 app.use('/users',require('./routes/users'));
 
-app.listen(3000); 
+var server = app.listen(3000, function () {
+  console.log('We are listening on port 3000!')
+});
+
+server.on( 'close', () => console.log('Closing') );
+
+module.exports = app; 
