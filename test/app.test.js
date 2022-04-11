@@ -344,21 +344,20 @@ describe('Testing Webpage Interaction', function() {
 				done();                               
 			});
 		});
-	}); 
+	});
 	
 });
 
 describe('Testing Database Interaction', function() {
 	
-	//before(function(done) {
+	before(function() {
         mongoose.connect('mongodb://localhost/testsheet');
         const db = mongoose.connection;
         db.on('error', console.error.bind(console, 'connection error'));
         db.once('open', function() {
           console.log('We are connected to test database!');
-          //done();
         });
-    //});
+    });
 	
 	beforeEach(function(done) {
 		mongoose.connection.collections.users.drop(function(){
