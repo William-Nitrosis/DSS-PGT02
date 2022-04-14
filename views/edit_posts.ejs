@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jayaram table</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="CSS\Formstyle.css">
+    <script src="js/datatable.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap.min.js"></script>
+</head>
+<body>  
+        
+    <ul>
+        <li><a href="#">Datatable</a></li>
+        <li style="float:right"><a class="active" href="#about">Login Page</a></li>
+      </ul>
+      <h1>Update Customer Information</h1>
+
+      <div class="main">
+
+  <!-- Form starts here -->
+  <form method="post" id="update_user">
+    <div class="new_user">
+        <div class="form-group">
+        <label for="name" class="text-light">Name</label>
+    <input type="hidden" name="id" value="<%= user._id %>">
+    <input type="text" name="name" value="<%= user.name %>" placeholder="Elon musk">
+    </div>
+    </div>
+    <div class="form-group">
+        <label for="Email" class="text-light">Email</label>
+    <input type="text" name="email" value="<%= user.email %>" placeholder="abc@gmail.com">
+    </div> 
+    <div class="form-group">
+        <label for="Age" class="text-light">Post</label>
+    <input type="text" name="post" value="<%= user.post %>" placeholder="Make your own post here">
+    </div>
+    <div class="form-group">
+    <button type="submit" class="btn btn-success">Save and Submit</button>
+    </div>
+    <div class="Back">
+        <a href="\home">
+        <button type="button" class="btn btn-warning">Back</button></a>
+        </div>
+           </form>
+    
+            <!-- Form Ends  here -->
+
+    <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap.min.js"></script>
+
+</div>
+
+<!-- including Footer -->
+<%- include('include/_footer') %>
+<!-- including Footer -->
