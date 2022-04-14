@@ -3,8 +3,9 @@ const expressEjsLayout = require('express-ejs-layouts')
 const flash = require('connect-flash');
 const session = require('express-session');
 const dotenv = require('dotenv');
-
+const morgan = require('morgan');
 const passport = require("passport");
+
 const app = express();
 const connectDB = require('./app/database/connection');
 
@@ -14,6 +15,9 @@ const PORT = process.env.PORT || 8080
 
 //passport config:
 require('./app/config/passport')(passport);
+
+//log requests
+app.use(morgan('tiny'));
 
 //mongoose database connection
 connectDB();
