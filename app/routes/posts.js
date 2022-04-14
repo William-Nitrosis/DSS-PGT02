@@ -4,7 +4,7 @@ const router = express.Router()
 const services = require('../services/render');
 const controller = require('../controller/controller');
 
-router.get('/home',services.homeRoutes);
+router.get('/',services.posts);
 
 router.get('/add-post',services.add_post);
 
@@ -20,5 +20,4 @@ router.delete('/api/posts/:id',controller.delete);
 
 
 
-
-  module.exports = router
+module.exports = router

@@ -21,7 +21,7 @@ exports.create = (req,res)=>{
         .save(post)
         .then(data => {
             //res.send(data)
-            res.redirect('/home');
+            res.redirect('/posts');
         })
         .catch(err =>{
             res.status(500).send({

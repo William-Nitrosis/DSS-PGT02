@@ -5,6 +5,7 @@ const session = require('express-session');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const passport = require("passport");
+const path = require('path');
 
 const app = express();
 const connectDB = require('./app/database/connection');
@@ -27,7 +28,7 @@ app.set('view engine','ejs');
 app.use(expressEjsLayout);
 
 //BodyParser
-app.use(express.urlencoded({extended : false}));
+app.use(express.urlencoded({extended : true}));
 
 //express session
 app.use(session({
@@ -44,10 +45,18 @@ app.use((req,res,next)=> {
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error  = req.flash('error');
     next();
-    })
-    
+    });
+
+
+//load assets
+app.use('/CSS',express.static(path.resolve(__dirname,"assets/CSS")))
+app.use('/img',express.static(path.resolve(__dirname,"assets/img")))
+app.use('/js',express.static(path.resolve(__dirname,"assets/js")))
+
 //Routes
 app.use('/',require('./app/routes/index'));
 app.use('/users',require('./app/routes/users'));
+app.use('/posts',require('./app/routes/posts'));
+//app.use('/api',require('.app/routes/api'));
 
 app.listen(PORT, ()=> { console.log(`Server is running on http://localhost:${PORT}`)});

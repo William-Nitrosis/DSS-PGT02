@@ -14,7 +14,7 @@ $("#update_post").submit(function (event) {
 
 
     var request = {
-        "url": `http://localhost:3000/api/posts/${data.id}`,
+        "url": `http://localhost:3000/posts/api/posts/${data.id}`,
         "method": "PUT",
         "data": data
     }
@@ -28,7 +28,7 @@ $("#update_post").submit(function (event) {
 function deletefunction(ids){   
 
     var request = {
-        "url" : `http://localhost:3000/api/posts/${ids}`,
+        "url" : `http://localhost:3000/posts/api/posts/${ids}`,
         "method" : "DELETE"
     }
     if(confirm("Do you really want to delete this record?")){
