@@ -1,26 +1,22 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const router = express.Router();
-const app = express();
 const expressEjsLayout = require('express-ejs-layouts')
 const flash = require('connect-flash');
 const session = require('express-session');
+const dotenv = require('dotenv');
+
 const passport = require("passport");
+const app = express();
+const connectDB = require('./app/database/connection');
+
+//env config
+dotenv.config( { path :'config.env'} )
+const PORT = process.env.PORT || 8080
 
 //passport config:
-require('./config/passport')(passport)
+require('./app/config/passport')(passport);
 
-//mongoose
-mongoose.connect('mongodb://localhost/test',{useNewUrlParser: true, useUnifiedTopology : true})
-	.then(() => console.log('connected to DB'))
-	.catch((err)=> console.log(err));
-
-//Get the default connection
-var db = mongoose.connection;
-
-//Bind connection to error event (to get notification of connection errors)
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
+//mongoose database connection
+connectDB();
 
 //EJS
 app.set('view engine','ejs');
@@ -47,7 +43,7 @@ app.use((req,res,next)=> {
     })
     
 //Routes
-app.use('/',require('./routes/index'));
-app.use('/users',require('./routes/users'));
+app.use('/',require('./app/routes/index'));
+app.use('/users',require('./app/routes/users'));
 
 app.listen(3000); 
