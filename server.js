@@ -36,6 +36,6 @@ app.get('/',(req,res)=>{
 
 //load routers
 
-app.use('/',require('./app/routes/router'))
+app.use('/',require('./app/routes/posts'))
 
 app.listen(PORT, ()=> { console.log(`Server is running on http://localhost:${PORT}`)});
