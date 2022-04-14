@@ -25,21 +25,21 @@
       <div class="main">
 
   <!-- Form starts here -->
-  <form method="post" id="update_user">
-    <div class="new_user">
+  <form method="post" id="update_post">
+    <div class="new_post">
         <div class="form-group">
         <label for="name" class="text-light">Name</label>
-    <input type="hidden" name="id" value="<%= user._id %>">
-    <input type="text" name="name" value="<%= user.name %>" placeholder="Elon musk">
+    <input type="hidden" name="id" value="<%= post._id %>">
+    <input type="text" name="name" value="<%= post.name %>" placeholder="Elon musk">
     </div>
     </div>
     <div class="form-group">
         <label for="Email" class="text-light">Email</label>
-    <input type="text" name="email" value="<%= user.email %>" placeholder="abc@gmail.com">
+    <input type="text" name="email" value="<%= post.email %>" placeholder="abc@gmail.com">
     </div> 
     <div class="form-group">
         <label for="Age" class="text-light">Post</label>
-    <input type="text" name="post" value="<%= user.post %>" placeholder="Make your own post here">
+    <input type="text" name="post" value="<%= post.post %>" placeholder="Make your own post here">
     </div>
     <div class="form-group">
     <button type="submit" class="btn btn-success">Save and Submit</button>

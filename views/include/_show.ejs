@@ -1,17 +1,17 @@
-<% for(var i = 0; i < users.length; i++) { %>
+<% for(var i = 0; i < posts.length; i++) { %>
 <tr>
     <td><%= i + 1 %></td>
-    <td><%= users[i].name %></td>
-    <td><%= users[i].email %></td>
-    <td><%= users[i].post %></td>
+    <td><%= posts[i].name %></td>
+    <td><%= posts[i].email %></td>
+    <td><%= posts[i].post %></td>
    <td>
 
-        <a href="/update-user?id=<%= users[i]._id%>">
+        <a href="/update-user?id=<%= posts[i]._id%>">
         <button type="button" class="btn btn-warning">Edit  <i class="fa-solid fa-pen"> </i></button></a>
 
 
         
- <a class="btn btn-danger delete" onclick ="deletefunction('<%= users[i]._id %>')" data-id=<%= users[i]._id%>> Delete
+ <a class="btn btn-danger delete" onclick ="deletefunction('<%= posts[i]._id %>')" data-id=<%= posts[i]._id%>> Delete
     <span class="text-gradient"><i class="fas fa-times"></i></span>
 </a>
    </td>
