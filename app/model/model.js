@@ -16,6 +16,6 @@ var schema = new mongoose.Schema({
     }
 })
 
-const Userdb = mongoose.model('userdb', schema);
+const Postdb = mongoose.model('postdb', schema);
 
-module.exports = Userdb;
+module.exports = Postdb;
