@@ -1,4 +1,4 @@
-var Postdb = require('../model/model');
+var Postdb = require('../models/postdb');
 
 // create and save new post
 exports.create = (req,res)=>{
