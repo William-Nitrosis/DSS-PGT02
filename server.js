@@ -10,7 +10,7 @@ const app = express();
 dotenv.config( { path :'config.env'} )
 const PORT = process.env.PORT || 8080
 
-const connectDB = require('./server/database/connection');
+const connectDB = require('./app/database/connection');
 
 //log requests
 app.use(morgan('tiny'));
@@ -36,6 +36,6 @@ app.get('/',(req,res)=>{
 
 //load routers
 
-app.use('/',require('./server/routes/router'))
+app.use('/',require('./app/routes/router'))
 
 app.listen(PORT, ()=> { console.log(`Server is running on http://localhost:${PORT}`)});
