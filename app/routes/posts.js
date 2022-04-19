@@ -3,12 +3,14 @@ const router = express.Router()
 
 const services = require('../services/render');
 const controller = require('../controller/controller');
+const {ensureAuthenticated} = require('../services/authentication');
 
-router.get('/',services.posts);
 
-router.get('/add-post',services.add_post);
+router.get('/',ensureAuthenticated,services.posts);
 
-router.get('/update-post',services.update_post);
+router.get('/add-post',ensureAuthenticated,services.add_post);
+
+router.get('/update-post',ensureAuthenticated,services.update_post);
 
 
 //API
