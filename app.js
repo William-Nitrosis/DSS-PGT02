@@ -1,33 +1,34 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const router = express.Router();
-const app = express();
 const expressEjsLayout = require('express-ejs-layouts')
 const flash = require('connect-flash');
 const session = require('express-session');
+const dotenv = require('dotenv');
+const morgan = require('morgan');
 const passport = require("passport");
+const path = require('path');
+
+const app = express();
+const connectDB = require('./app/database/connection');
+
+//env config
+dotenv.config( { path :'config.env'} )
+const PORT = process.env.PORT || 8080
 
 //passport config:
-require('./config/passport')(passport)
+require('./app/config/passport')(passport);
 
-//mongoose
-mongoose.connect('mongodb://localhost/test',{useNewUrlParser: true, useUnifiedTopology : true})
-	.then(() => console.log('connected to DB'))
-	.catch((err)=> console.log(err));
+//log requests
+app.use(morgan('tiny'));
 
-//Get the default connection
-var db = mongoose.connection;
-
-//Bind connection to error event (to get notification of connection errors)
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
+//mongoose database connection
+connectDB();
 
 //EJS
 app.set('view engine','ejs');
 app.use(expressEjsLayout);
 
 //BodyParser
-app.use(express.urlencoded({extended : false}));
+app.use(express.urlencoded({extended : true}));
 
 //express session
 app.use(session({
@@ -44,10 +45,18 @@ app.use((req,res,next)=> {
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error  = req.flash('error');
     next();
-    })
-    
-//Routes
-app.use('/',require('./routes/index'));
-app.use('/users',require('./routes/users'));
+    });
 
-app.listen(3000); 
+
+//load assets
+app.use('/CSS',express.static(path.resolve(__dirname,"assets/CSS")))
+app.use('/img',express.static(path.resolve(__dirname,"assets/img")))
+app.use('/js',express.static(path.resolve(__dirname,"assets/js")))
+
+//Routes
+app.use('/',require('./app/routes/index'));
+app.use('/users',require('./app/routes/users'));
+app.use('/posts',require('./app/routes/posts'));
+//app.use('/api',require('.app/routes/api'));
+
+app.listen(PORT, ()=> { console.log(`Server is running on http://localhost:${PORT}`)});

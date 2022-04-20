@@ -1,17 +1,12 @@
 const express = require('express');
 const router  = express.Router();
-const {ensureAuthenticated} = require('../config/auth') 
+const {ensureAuthenticated} = require('../services/authentication');
+
+
 //login page
 router.get('/', (req,res)=>{
-    res.render('welcome');
+    res.redirect('/users/login');
 })
-
-//register page
-router.get('/register', (req,res)=>{
-    res.render('register');
-})
-
-
 
 // dashboard
 router.get('/dashboard',ensureAuthenticated,(req,res)=>{
@@ -19,4 +14,5 @@ router.get('/dashboard',ensureAuthenticated,(req,res)=>{
         user: req.user
     });
 })
+
 module.exports = router; 
