@@ -8,6 +8,7 @@ const QRCode = require('qrcode')
 var captchaLib = require("nodejs-captcha");
 var captchaValue = null;
 
+
 // Login handle
 router.get('/login',(req,res)=>{
 	var captcha = captchaLib();
@@ -16,59 +17,7 @@ router.get('/login',(req,res)=>{
     res.render('login', {
 		captchaSource: captcha.image
 	});
-})
-
-// Register handle
-router.get('/register',(req,res)=>{
-	var captcha = captchaLib();
-	captchaValue = captcha.value
-	
-    res.render('register', {
-		captchaSource: captcha.image
-	})
-})
-
-// Register 2FA handle
-router.get('/sign-up-2fa', (req, res) => {
-  if (!req.session.qr) {
-    return res.redirect('/')
-  }
-
-  return res.render('signup-2fa.ejs', { qr: req.session.qr })
-})
-
-// Register 2FA post handle
-router.post('/sign-up-2fa', (req, res) => {
-	if (!req.session.email) {
-		return res.redirect('/')
-	}
-
-	const sessionEmail = req.session.email
-	code = req.body.code
-	
-	console.log(code)
-	console.log(sessionEmail)
-	
-	async function findSecret(){
-		const userquery = await User.findOne({ 'email': sessionEmail }, 'secret').exec();
-		var qrSecret = userquery.secret;
-		console.log('%s', qrSecret);
-		
-		if (authenticator.check(code, qrSecret)) {
-		passport.authenticate('local',{
-			successRedirect : '/dashboard',
-			failureRedirect: '/users/login',
-			failureFlash : true
-		})
-		(req,res)
-		}		
-	}
-
-	findSecret();
-	
-})
-
-
+});
 
 // Login post handle
 router.post('/login',(req,res,next)=>{
@@ -95,7 +44,28 @@ router.post('/login',(req,res,next)=>{
 		})
 		
 	}
-})
+});
+
+
+
+// Logout
+router.get('/logout',(req,res)=>{
+req.logout();
+req.flash('success_msg','Now logged out');
+res.redirect('/users/login'); 
+});
+
+
+
+// Register handle
+router.get('/register',(req,res)=>{
+	var captcha = captchaLib();
+	captchaValue = captcha.value
+	
+    res.render('register', {
+		captchaSource: captcha.image
+	})
+});
 
 // Register post handle
 router.post('/register',(req,res)=>{
@@ -181,12 +151,52 @@ router.post('/register',(req,res)=>{
 			 }
        })
     }
-    })
+});
 
-//logout
-router.get('/logout',(req,res)=>{
-req.logout();
-req.flash('success_msg','Now logged out');
-res.redirect('/users/login'); 
-})
+
+
+// Register 2FA handle
+router.get('/sign-up-2fa', (req, res)=>{
+  if (!req.session.qr) {
+    return res.redirect('/')
+  }
+
+  return res.render('signup-2fa.ejs', { qr: req.session.qr })
+});
+
+// Register 2FA post handle
+router.post('/sign-up-2fa', (req, res)=>{
+	if (!req.session.email) {
+		return res.redirect('/')
+	}
+
+	const sessionEmail = req.session.email
+	code = req.body.code
+	
+	console.log(code)
+	console.log(sessionEmail)
+	
+	async function findSecret(){
+		const userquery = await User.findOne({ 'email': sessionEmail }, 'secret').exec();
+		var qrSecret = userquery.secret;
+		console.log('%s', qrSecret);
+		
+		if (authenticator.check(code, qrSecret)) {
+		passport.authenticate('local',{
+			successRedirect : '/dashboard',
+			failureRedirect: '/users/login',
+			failureFlash : true
+		})
+		(req,res)
+		}		
+	}
+
+	findSecret();
+	
+});
+
+
+
+
+
 module.exports  = router;
