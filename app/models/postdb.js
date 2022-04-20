@@ -8,13 +8,12 @@ var schema = new mongoose.Schema({
     email : {
         type: String,
         required: true,
-        unique: true
     },
     post : {
         type : String,
         required : true
     }
-})
+});
 
 const Postdb = mongoose.model('postdb', schema);
 
