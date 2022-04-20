@@ -49,21 +49,26 @@ router.post('/sign-up-2fa', (req, res) => {
 	console.log(code)
 	console.log(sessionEmail)
 	
-	User.findOne({ 'email': sessionEmail }, 'secret', function (err, user) {
-		console.log('%s', user.secret)
-		var qrSecret = user.secret
-	})
-	
-	
-	if (authenticator.check(code, qrSecret)) {
+	async function findSecret(){
+		const userquery = await User.findOne({ 'email': sessionEmail }, 'secret').exec();
+		var qrSecret = userquery.secret;
+		console.log('%s', qrSecret);
+		
+		if (authenticator.check(code, qrSecret)) {
 		passport.authenticate('local',{
 			successRedirect : '/dashboard',
 			failureRedirect: '/users/login',
 			failureFlash : true
 		})
-		(req,res,next)
+		(req,res)
+		}		
 	}
+
+	findSecret();
+	
 })
+
+
 
 // Login post handle
 router.post('/login',(req,res,next)=>{
@@ -92,8 +97,8 @@ router.post('/login',(req,res,next)=>{
 	}
 })
 
-  //register post handle
-  router.post('/register',(req,res)=>{
+// Register post handle
+router.post('/register',(req,res)=>{
     const {name,email, password, password2, captchaInput} = req.body;
     let errors = [];
 	
@@ -177,6 +182,7 @@ router.post('/login',(req,res,next)=>{
        })
     }
     })
+
 //logout
 router.get('/logout',(req,res)=>{
 req.logout();
