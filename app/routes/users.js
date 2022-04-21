@@ -190,22 +190,19 @@ router.post('/sign-up-2fa', (req, res)=>{
 	console.log(code)
 	console.log(sessionEmail)
 	
-	async function findSecret(){
+	async function authenticateQRSecret(){
 		const userquery = await User.findOne({ 'email': sessionEmail }, 'secret').exec();
 		var qrSecret = userquery.secret;
 		console.log('%s', qrSecret);
 		
 		if (authenticator.check(code, qrSecret)) {
-		passport.authenticate('local',{
-			successRedirect : '/dashboard',
-			failureRedirect: '/users/login',
-			failureFlash : true
-		})
-		(req,res)
+			res.redirect('/users/login');
+		} else {
+			res.redirect('/users/sign-up-2fa');
 		}
 	}
 
-	findSecret();
+	authenticateQRSecret();
 	
 });
 
