@@ -6,14 +6,14 @@ const passport = require('passport');
 const { authenticator } = require('otplib')
 const QRCode = require('qrcode')
 var captchaLib = require("nodejs-captcha");
-var captchaValue = null;
+
+var captcha = null;
 
 
 // Login handle
 router.get('/login',(req,res)=>{
-	var captcha = captchaLib();
-	captchaValue = captcha.value
-	
+	regenerateCaptcha();
+
     res.render('login', {
 		captchaSource: captcha.image
 	});
@@ -22,19 +22,17 @@ router.get('/login',(req,res)=>{
 // Login post handle
 router.post('/login',(req,res,next)=>{
 	const {captchaInput} = req.body;
-	console.log('Captcha input ' + captchaInput + ' | Actual value :' + captchaValue);
+	console.log('Captcha input ' + captchaInput + ' | Actual value :' + captcha.value);
 	
-	if (captchaInput == captchaValue) {
+	if (captchaInput == captcha.value) {
 		passport.authenticate('local',{
 			successRedirect : '/dashboard',
 			failureRedirect: '/users/login',
 			failureFlash : true
 		})
-		(req,res,next)
+		(req,res,next);
 	} else {
 		var errors = [];
-		var captcha = captchaLib();
-		captchaValue = captcha.value
 		
 		errors.push({msg : "Captcha incorrect, please try again."})
 		
@@ -59,8 +57,7 @@ res.redirect('/users/login');
 
 // Register handle
 router.get('/register',(req,res)=>{
-	var captcha = captchaLib();
-	captchaValue = captcha.value
+	regenerateCaptcha();
 	
     res.render('register', {
 		captchaSource: captcha.image
@@ -72,8 +69,8 @@ router.post('/register',(req,res)=>{
     const {name,email, password, password2, captchaInput} = req.body;
     let errors = [];
 	
-    console.log(' Name ' + name+ ' email :' + email+ ' pass:' + password);
-	console.log('Captcha input ' + captchaInput + ' | Actual value :' + captchaValue);
+    console.log(' Name ' + name + ' email :' + email + ' pass:' + password);
+	console.log('Captcha input ' + captchaInput + ' | Actual value :' + captcha.value);
 	
     if(!name || !email || !password || !password2 || !captchaInput) {
         errors.push({msg : "Please fill in all fields"})
@@ -88,8 +85,8 @@ router.post('/register',(req,res)=>{
         errors.push({msg : 'password atleast 6 characters'})
     }
 	
-	// check captcha
-	if (captchaInput != captchaValue) {
+	// error if captcha is incorrect
+	if (captchaInput != captcha.value) {
 		errors.push({msg : "Captcha incorrect, please try again."})
 	}
 	
@@ -200,3 +197,7 @@ router.post('/sign-up-2fa', (req, res)=>{
 
 
 module.exports  = router;
+
+function regenerateCaptcha() {
+	captcha = captchaLib();
+}
