@@ -34,23 +34,23 @@ router.post('/login',(req,res,next)=>{
 	} else {
 		var errors = [];
 		
-		errors.push({msg : "Captcha incorrect, please try again."})
+		errors.push({msg : "Captcha incorrect, please try again."});
 		
 		res.render('login', {
 			errors : errors,
 			captchaSource: captcha.image
-		})
-		
-	}
+		});
+	};
+	
 });
 
 
 
 // Logout
 router.get('/logout',(req,res)=>{
-req.logout();
-req.flash('success_msg','Now logged out');
-res.redirect('/users/login'); 
+	req.logout();
+	req.flash('success_msg','Now logged out');
+	res.redirect('/users/login'); 
 });
 
 
@@ -66,21 +66,23 @@ router.get('/register',(req,res)=>{
 
 // Register post handle
 router.post('/register',(req,res)=>{
-    const {name,email, password, password2, captchaInput} = req.body;
+    const {name, email, password, password2, captchaInput} = req.body;
     let errors = [];
 	
     console.log(' Name ' + name + ' email :' + email + ' pass:' + password);
 	console.log('Captcha input ' + captchaInput + ' | Actual value :' + captcha.value);
 	
+	// require fields are filled
     if(!name || !email || !password || !password2 || !captchaInput) {
         errors.push({msg : "Please fill in all fields"})
     }
-    //check if match
+
+    // error if passwords dont match
     if(password !== password2) {
         errors.push({msg : "passwords dont match"});
     }
     
-    //check if password is more than 6 characters
+    // error if password is less than 6 characters
     if(password.length < 6 ) {
         errors.push({msg : 'password atleast 6 characters'})
     }
@@ -154,11 +156,11 @@ router.post('/register',(req,res)=>{
 
 // Register 2FA handle
 router.get('/sign-up-2fa', (req, res)=>{
-  if (!req.session.qr) {
-    return res.redirect('/')
-  }
+	if (!req.session.qr) {
+		return res.redirect('/')
+	}
 
-  return res.render('signup-2fa.ejs', { qr: req.session.qr })
+	return res.render('signup-2fa', { qr: req.session.qr })
 });
 
 // Register 2FA post handle
@@ -185,7 +187,7 @@ router.post('/sign-up-2fa', (req, res)=>{
 			failureFlash : true
 		})
 		(req,res)
-		}		
+		}
 	}
 
 	findSecret();
