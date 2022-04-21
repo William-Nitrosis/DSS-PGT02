@@ -109,7 +109,7 @@ router.post('/register',(req,res)=>{
 	// check if no errors
 	if (errors.length === 0) {
 		// validation passed
-		secret = authenticator.generateSecret()
+		var secret = authenticator.generateSecret()
 		const newUser = new User({
 			name: name,
 			email: email,
@@ -133,13 +133,7 @@ router.post('/register',(req,res)=>{
 							req.flash('success_msg', 'You have now registered!');
 
 							//generate qr and put it in session
-							QRCode.toDataURL(authenticator.keyuri(email, '2FA Node App', secret), (err, url) => {
-								if (err) throw err;
-
-								req.session.qr = url;
-								req.session.email = email;
-								res.redirect('/users/sign-up-2fa');
-							});
+							generateQRandRedirect2FASignup(email, secret, req, res);
 						})
 						.catch(value => console.log(value));
 				}));
@@ -220,6 +214,17 @@ router.post('/sign-up-2fa', (req, res)=>{
 
 
 module.exports  = router;
+
+function generateQRandRedirect2FASignup(email, secret, req, res) {
+	QRCode.toDataURL(authenticator.keyuri(email, '2FA Node App', secret), (err, url) => {
+		if (err)
+			throw err;
+
+		req.session.qr = url;
+		req.session.email = email;
+		res.redirect('/users/sign-up-2fa');
+	});
+}
 
 function regenerateCaptcha() {
 	captcha = captchaLib();
