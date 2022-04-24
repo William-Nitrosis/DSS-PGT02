@@ -1,4 +1,5 @@
 var Postdb = require('../models/postdb');
+var validator = require('validator');
 
 // create and save new post
 exports.create = (req,res)=>{
