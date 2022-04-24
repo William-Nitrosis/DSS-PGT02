@@ -7,6 +7,7 @@ const { authenticator } = require('otplib')
 const QRCode = require('qrcode')
 var captchaLib = require("nodejs-captcha");
 var captchaValue = null;
+var validator = require('validator');
 
 // Login handle
 router.get('/login',(req,res)=>{
@@ -39,12 +40,13 @@ router.get('/sign-up-2fa', (req, res) => {
 
 // Register 2FA post handle
 router.post('/sign-up-2fa', (req, res) => {
+	req.session.email = validator.normalizeEmail(req.session.email); // cleans and validates email from session
 	if (!req.session.email) {
 		return res.redirect('/')
 	}
 
 	const sessionEmail = req.session.email
-	code = req.body.code
+	code = validator.escape(req.body.code);
 	
 	console.log(code)
 	console.log(sessionEmail)
@@ -72,7 +74,8 @@ router.post('/sign-up-2fa', (req, res) => {
 
 // Login post handle
 router.post('/login',(req,res,next)=>{
-	const {captchaInput} = req.body;
+	var {captchaInput} = req.body;
+	captchaInput = validator.escape(captchaInput);
 	console.log('Captcha input ' + captchaInput + ' | Actual value :' + captchaValue);
 	
 	if (captchaInput == captchaValue) {
@@ -99,7 +102,13 @@ router.post('/login',(req,res,next)=>{
 
 // Register post handle
 router.post('/register',(req,res)=>{
-    const {name,email, password, password2, captchaInput} = req.body;
+    var {name, email, password, password2, captchaInput} = req.body;
+	name = validator.escape(name);
+	email = validator.escape(email);
+	password = validator.escape(password);
+	password2 = validator.escape(password2);
+	captchaInput = validator.escape(captchaInput);
+	
     let errors = [];
 	
     console.log(' Name ' + name+ ' email :' + email+ ' pass:' + password);

@@ -8,6 +8,12 @@ exports.create = (req,res)=>{
         return;
     }
 
+	// clean inputs
+	req.body.name = validator.escape(req.body.name);
+	req.body.email = validator.escape(req.body.email);
+	req.body.post = validator.escape(req.body.post);
+
+
     // new post
     const post = new Postdb({
         name : req.body.name,
@@ -33,7 +39,6 @@ exports.create = (req,res)=>{
 
 // retrieve and return all posts/ retrive and return a single post
 exports.find = (req, res)=>{
-
     if(req.query.id){
         const id = req.query.id;
 
