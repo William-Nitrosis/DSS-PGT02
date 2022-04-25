@@ -76,6 +76,8 @@ router.post('/sign-up-2fa', (req, res) => {
 router.post('/login',(req,res,next)=>{
 	var {captchaInput} = req.body;
 	captchaInput = validator.escape(captchaInput);
+	req.body.email = validator.escape(req.body.email);
+	req.body.password = validator.escape(req.body.password);
 	console.log('Captcha input ' + captchaInput + ' | Actual value :' + captchaValue);
 	
 	if (captchaInput == captchaValue) {
