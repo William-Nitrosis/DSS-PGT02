@@ -101,78 +101,8 @@ router.post('/register',(req,res)=>{
 	}
 	
 	// error if user aready exists
-	async function doesUserExist(){
-		const user = await User.findOne({ 'email': email }).exec();
-		if (user) {
-			console.log('Email already registered: ' + user);
-			return true;
-		} else {
-			return false;
-		}
-	}
-	if (doesUserExist() === true) {
-		errors.push({msg : 'email already registered' });
-	}
-
-	// check if no errors
-	if (errors.length === 0) {
-		// validation passed
-		var secret = authenticator.generateSecret()
-		const newUser = new User({
-			name: name,
-			email: email,
-			password: password,
-			secret: secret
-		});
-
-		// hash password
-		bcrypt.genSalt(10, (err, salt) =>
-			bcrypt.hash(newUser.password, salt,
-				(err, hash) => {
-					if (err) throw err;
-
-					// save password as hash
-					newUser.password = hash;
-
-					// save user to db
-					newUser.save()
-						.then((value) => {
-							console.log(value);
-							req.flash('success_msg', 'You have now registered!');
-
-							//generate qr and put it in session
-							generateQRandRedirect2FASignup(email, secret, req, res);
-						})
-						.catch(value => console.log(value));
-				}));
-	} else {
-		// errors occurred
-		regenerateCaptcha();
-		// clear error messages and push generic error msg for account enumeration protection
-		console.log(errors);
-		errors = [];
-		errors.push({msg: 
-			'An error occurred with your registration.\n\
-			The cause of the error can be:\n\
-			The username is invalid or is already taken. Select Another username.\n\
-			The password is of an invalid length. Use a longer password.\n\
-			Passwords do not match. Retype your passwords to ensure you entered them correctly.\n\
-			The email address you entered is already registered or is invalid. Use another email address.\n\
-			The captcha is invalid. Write the response for the captcha correctly.\n\
-			You have not agreed to the terms of service. Make sure you agree to the terms of service and check the applicable checkbox below.\n\
-			Correct any errors in registration and try again.\n\
-			We do not disclose the reason why the registration failed for security reasons.'
-		});
-
-		res.render('register', {
-			errors: errors,
-			name: name,
-			email: email,
-			password: password,
-			password2: password2,
-			captchaSource: captcha.image
-		})
-	}
+	// if no errors save to user to database
+	trySaveUsertoDB(email, errors, name, password, req, res, password2);
 });
 
 
@@ -220,6 +150,74 @@ router.post('/sign-up-2fa', (req, res)=>{
 
 module.exports  = router;
 
+async function trySaveUsertoDB(email, errors, name, password, req, res, password2) {
+	await doesUserExistWithEmail(email).then((value) => {
+		console.log(value);
+		if (value === true) { errors.push({ msg: 'Email already registered' }); };
+	});
+
+	// check if no errors
+	if (errors.length === 0) {
+		// validation passed
+		console.log("Validation Passed");
+		var secret = authenticator.generateSecret();
+		const newUser = new User({
+			name: name,
+			email: email,
+			password: password,
+			secret: secret
+		});
+
+		// hash password
+		bcrypt.genSalt(10, (err, salt) => bcrypt.hash(newUser.password, salt,
+			(err, hash) => {
+				if (err)
+					throw err;
+
+				// save password as hash
+				newUser.password = hash;
+
+				// save user to db
+				newUser.save()
+					.then((value) => {
+						console.log("Saved to db: " + value);
+						req.flash('success_msg', 'You have now registered!');
+
+						//generate qr and put it in session
+						generateQRandRedirect2FASignup(email, secret, req, res);
+					})
+					.catch(value => console.log(value));
+			}));
+	} else {
+		// errors occurred
+		regenerateCaptcha();
+		// clear error messages and push generic error msg for account enumeration protection
+		console.log(errors);
+		errors = [];
+		errors.push({
+			msg: 'An error occurred with your registration.\n\
+			The cause of the error can be:\n\
+			The username is invalid or is already taken. Select Another username.\n\
+			The password is of an invalid length. Use a longer password.\n\
+			Passwords do not match. Retype your passwords to ensure you entered them correctly.\n\
+			The email address you entered is already registered or is invalid. Use another email address.\n\
+			The captcha is invalid. Write the response for the captcha correctly.\n\
+			You have not agreed to the terms of service. Make sure you agree to the terms of service and check the applicable checkbox below.\n\
+			Correct any errors in registration and try again.\n\
+			We do not disclose the reason why the registration failed for security reasons.'
+		});
+
+		res.render('register', {
+			errors: errors,
+			name: name,
+			email: email,
+			password: password,
+			password2: password2,
+			captchaSource: captcha.image
+		});
+	}
+}
+
 function generateQRandRedirect2FASignup(email, secret, req, res) {
 	QRCode.toDataURL(authenticator.keyuri(email, '2FA Node App', secret), (err, url) => {
 		if (err)
@@ -243,3 +241,12 @@ function waitRandTimeFromToMS(from, to) {
 	},randTimeMS);
 }
 
+async function doesUserExistWithEmail(email){
+	const user = await User.findOne({ 'email': email }).exec();
+	if (user) {
+		console.log('Email already registered: ' + user);
+		return true;
+	} else {
+		return false;
+	}
+}
