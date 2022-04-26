@@ -25,12 +25,20 @@ router.post('/login',(req,res,next)=>{
 	console.log('Captcha input ' + captchaInput + ' | Actual value :' + captcha.value);
 	
 	if (captchaInput == captcha.value) {
-		passport.authenticate('local',{
+		//waitRandTimeFromToMS(50, 500);
+		var from = 50;
+		var to = 500;
+		const randTimeMS = Math.floor(Math.random() * (to - from) + from);
+		console.log("...waiting a random time between " + from + " and " + to + "..." + randTimeMS);
+		setTimeout(function(){
+			console.log('after');
+			passport.authenticate('local',{
 			successRedirect : '/dashboard',
 			failureRedirect: '/users/login',
 			failureFlash : true
 		})
 		(req,res,next);
+		},randTimeMS);
 	} else {
 		var errors = [];
 		
@@ -226,3 +234,12 @@ function generateQRandRedirect2FASignup(email, secret, req, res) {
 function regenerateCaptcha() {
 	captcha = captchaLib();
 }
+
+function waitRandTimeFromToMS(from, to) {
+	const randTimeMS = Math.floor(Math.random() * (to - from) + from);
+	console.log("...waiting a random time between " + from + " and " + to + "..."+randTimeMS);
+	setTimeout(function(){
+		console.log('after');
+	},randTimeMS);
+}
+
