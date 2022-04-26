@@ -22,7 +22,7 @@ router.get('/login',(req,res)=>{
 
 // Login post handle
 router.post('/login',(req,res,next)=>{
-	const {captchaInput} = req.body;
+	var {captchaInput} = req.body;
 	captchaInput = validator.escape(captchaInput);
 	req.body.email = validator.escape(req.body.email);
 	req.body.password = validator.escape(req.body.password);
