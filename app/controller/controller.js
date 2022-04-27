@@ -1,4 +1,4 @@
-var Postdb = require('../models/postdb');
+var Post = require('../models/post');
 var validator = require('validator');
 
 // create and save new post
@@ -10,17 +10,17 @@ exports.create = (req,res)=>{
     }
 
 	// clean inputs
-	req.body.name = validator.escape(req.body.name);
-	req.body.email = validator.escape(req.body.email);
+	req.user.name = validator.escape(req.user.name);
+	req.user.id = validator.escape(req.user.id);
 	req.body.post = validator.escape(req.body.post);
 
+    console.log(req.user.id);
 
     // new post
-    const post = new Postdb({
-        name : req.body.name,
-        email : req.body.email,
-        post: req.body.post,
-     
+    const post = new Post({
+        name : req.user.name,
+        userid : req.user.id,
+        content: req.body.post,
     })
 
     // save post in the database
@@ -43,7 +43,7 @@ exports.find = (req, res)=>{
     if(req.query.id){
         const id = req.query.id;
 
-        Postdb.findById(id)
+        Post.findById(id)
             .then(data =>{
                 if(!data){
                     res.status(404).send({ message : "Not found post with id "+ id})
@@ -56,7 +56,7 @@ exports.find = (req, res)=>{
             })
 
     }else{
-        Postdb.find()
+        Post.find()
             .then(post => {
                 res.send(post)
             })
@@ -77,7 +77,7 @@ exports.update = (req, res)=>{
     }
 
     const id = req.params.id;
-    Postdb.findByIdAndUpdate(id, req.body, { useFindAndModify: false})
+    Post.findByIdAndUpdate(id, req.body, { useFindAndModify: false})
         .then(data => {
             if(!data){
                 res.status(404).send({ message : `Cannot Update post with ${id}. Maybe post not found!`})
@@ -94,7 +94,7 @@ exports.update = (req, res)=>{
 exports.delete = (req, res)=>{
     const id = req.params.id;
 
-    Postdb.findByIdAndDelete(id)
+    Post.findByIdAndDelete(id)
         .then(data => {
             if(!data){
                 res.status(404).send({ message : `Cannot Delete with id ${id}. Maybe id is wrong`})
