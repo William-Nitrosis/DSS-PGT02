@@ -66,7 +66,7 @@ exports.find = (req, res)=>{
 }
 
 // Update a post by post id
-exports.update = (req, res)=>{
+exports.update = async (req, res)=>{
     // validate request
     if(!req.body){
         return res.status(400).send({ message : "Data to update can not be empty"});
@@ -79,19 +79,30 @@ exports.update = (req, res)=>{
 
     console.log("trying to update id: "+id);
     console.log(req.body.post);
-    
-    Post.findByIdAndUpdate(id, {content : req.body.post})
-        .then(data => {
-            if(!data){
-                res.status(404).send({ message : `Cannot Update post with ${id}. Maybe post not found!`})
-            }else{
-                console.log(data)
-                res.send(data)
-            }
-        })
-        .catch(err =>{
-            res.status(500).send({ message : "Error Update post information"})
-        })
+
+    // update post content
+    const post = await Post.findById(id).exec();
+    post.content = req.body.post;
+
+    // only allow post update when the current user is the same as the post owner
+    if(post.userid === req.user.id){
+        console.log("IDs are equal")
+
+        // save updated post to db
+        post.save()
+            .then((data) => {
+                console.log("Saved to db: " + data);
+                // req.flash('success_msg', 'You have now registered!');
+                res.send(data);
+            })
+            .catch(err =>{
+                console.log(err)
+                res.status(500).send({ message : "Error Update post information"})
+            });
+    }else{
+        console.log("IDs are not equal")
+        res.status(500).send({ message : "Error Update post information"})
+    }
 }
 
 // Delete a post with specified post id in the request
