@@ -5,16 +5,13 @@ var validator = require('validator');
 exports.create = (req,res)=>{
     // validate request
     if(!req.body){
-        res.status(400).send({ message : "Content can not be emtpy!"});
-        return;
+        return res.status(400).send({ message : "Content can not be empty!"});
     }
 
 	// clean inputs
 	req.user.name = validator.escape(req.user.name);
 	req.user.id = validator.escape(req.user.id);
 	req.body.post = validator.escape(req.body.post);
-
-    console.log(req.user.id);
 
     // new post
     const post = new Post({
@@ -68,20 +65,27 @@ exports.find = (req, res)=>{
     
 }
 
-// Update a new idetified post by post id
+// Update a post by post id
 exports.update = (req, res)=>{
+    // validate request
     if(!req.body){
-        return res
-            .status(400)
-            .send({ message : "Data to update can not be empty"})
+        return res.status(400).send({ message : "Data to update can not be empty"});
     }
 
-    const id = req.params.id;
-    Post.findByIdAndUpdate(id, req.body, { useFindAndModify: false})
+
+    // clean inputs
+	req.body.post = validator.escape(req.body.post);
+    const id = validator.escape(req.params.id);
+
+    console.log("trying to update id: "+id);
+    console.log(req.body.post);
+    
+    Post.findByIdAndUpdate(id, {content : req.body.post})
         .then(data => {
             if(!data){
                 res.status(404).send({ message : `Cannot Update post with ${id}. Maybe post not found!`})
             }else{
+                console.log(data)
                 res.send(data)
             }
         })
