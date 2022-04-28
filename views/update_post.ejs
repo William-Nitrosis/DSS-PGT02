@@ -28,7 +28,8 @@
     <form method="post" id="update_post">
         <div class="form-group">
             <label for="Age" class="text-light">Post</label>
-            <input type="text" name="post" value="<%= post.post %>" placeholder="Make your own post here">
+            <input type="hidden" name="id" value="<%= post._id %>">
+            <input type="text" name="post" value="<%= post.content %>" placeholder="Update your post here">
         </div>
 
         <div class="form-group">
