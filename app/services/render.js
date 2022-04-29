@@ -2,8 +2,11 @@ const axios = require('axios');
 
 exports.posts = (req, res) => {
     // Make a get request to /api/posts
+    console.log("hi posts:"+req.user);
+
     axios.get('http://localhost:3000/posts/api/posts')
         .then(function(response){
+            console.log(response);
             res.render('posts', { posts : response.data });
         })
         .catch(err =>{

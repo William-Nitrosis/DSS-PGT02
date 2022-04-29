@@ -5,7 +5,7 @@ const {ensureAuthenticated} = require('../services/authentication');
 
 //login page
 router.get('/', (req,res)=>{
-    res.redirect('/users/login');
+    res.redirect(301,'/users/login');
 })
 
 // dashboard

@@ -58,6 +58,6 @@ app.use('/js',express.static(path.resolve(__dirname,"assets/js")))
 app.use('/',require('./app/routes/index'));
 app.use('/users',require('./app/routes/users'));
 app.use('/posts',require('./app/routes/posts'));
-//app.use('/api',require('.app/routes/api'));
+
 
 app.listen(PORT, ()=> { console.log(`Server is running on http://localhost:${PORT}`)});

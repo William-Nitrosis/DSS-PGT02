@@ -37,6 +37,7 @@ exports.create = (req,res)=>{
 
 // retrieve and return all posts/ retrive and return a single post
 exports.find = (req, res)=>{
+    console.log("hi find"+req.user);
     if(req.query.id){
         const id = req.query.id;
 

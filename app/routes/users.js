@@ -163,7 +163,7 @@ module.exports  = router;
 
 async function trySaveUsertoDB(email, errors, name, password, req, res, password2) {
 	await doesUserExistWithEmail(email).then((value) => {
-		console.log(value);
+		console.log("User exists with email: "+value);
 		if (value === true) { errors.push({ msg: 'Email already registered' }); };
 	});
 
