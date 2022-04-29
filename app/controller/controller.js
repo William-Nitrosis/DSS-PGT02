@@ -37,6 +37,7 @@ exports.create = (req,res)=>{
 
 // retrieve and return all posts/ retrive and return a single post
 exports.find = (req, res)=>{
+    console.log("hi find"+req.user);
     if(req.query.id){
         const id = req.query.id;
 
@@ -80,7 +81,7 @@ exports.update = async (req, res)=>{
     console.log("trying to update id: "+id);
     console.log(req.body.post);
 
-    // update post content
+    // find update post content
     const post = await Post.findById(id).exec();
     post.content = req.body.post;
 
@@ -106,22 +107,33 @@ exports.update = async (req, res)=>{
 }
 
 // Delete a post with specified post id in the request
-exports.delete = (req, res)=>{
-    const id = req.params.id;
+exports.delete = async (req, res)=>{
 
-    Post.findByIdAndDelete(id)
-        .then(data => {
-            if(!data){
-                res.status(404).send({ message : `Cannot Delete with id ${id}. Maybe id is wrong`})
-            }else{
-                res.send({
-                    message : "Post was deleted successfully!"
-                })
-            }
-        })
-        .catch(err =>{
-            res.status(500).send({
-                message: "Could not delete Post with id=" + id
+    // clean inputs
+    const id = validator.escape(req.params.id);
+
+    console.log("trying to delete id: "+id);
+
+    // find post to delete
+    const post = await Post.findById(id).exec();
+
+    // only allow post deletion when the current user is the same as the post owner
+    if(post.userid === req.user.id){
+        console.log("IDs are equal")
+
+        Post.findByIdAndDelete(id)
+            .then(data => {
+                if(!data){
+                    res.status(404).send({ message : `Cannot Delete with id ${id}. Maybe id is wrong`});
+                }else{
+                    res.send({message : "Post was deleted successfully!"});
+                }
+            })
+            .catch(err =>{
+                res.status(500).send({message: "Could not delete Post with id=" + id});
             });
-        });
+    }else{
+        console.log("IDs are not equal");
+        res.status(403).send({ message : "Error deleting post"});
+    }
 }
