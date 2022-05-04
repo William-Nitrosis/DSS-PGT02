@@ -1,0 +1,5 @@
+1. Open Command Prompt/Powershell as Administrator.
+2. Execute "net stop MongoDB"
+
+
+net stop MongoDB
