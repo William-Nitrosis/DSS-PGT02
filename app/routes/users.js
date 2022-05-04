@@ -47,7 +47,8 @@ router.post('/login',(req,res,next)=>{
 		var errors = [];
 		
 		errors.push({msg : "Captcha incorrect, please try again."});
-		
+		regenerateCaptcha();
+
 		res.render('login', {
 			errors : errors,
 			captchaSource: captcha.image
