@@ -1,20 +1,20 @@
 const mongoose = require('mongoose');
 
-var schema = new mongoose.Schema({
+var PostSchema = new mongoose.Schema({
     name : {
         type : String,
         required: true
     },
-    email : {
+    userid : {
         type: String,
         required: true,
     },
-    post : {
+    content : {
         type : String,
         required : true
     }
 });
 
-const Postdb = mongoose.model('postdb', schema);
+const Post = mongoose.model('Post', PostSchema);
 
-module.exports = Postdb;
+module.exports = Post;
