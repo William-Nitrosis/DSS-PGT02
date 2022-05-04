@@ -26,6 +26,7 @@ router.post('/login',(req,res,next)=>{
 	captchaInput = validator.escape(captchaInput);
 	req.body.email = validator.escape(req.body.email);
 	req.body.password = validator.escape(req.body.password);
+	req.body.twoFAcode = validator.escape(req.body.twoFAcode);
 	console.log('Captcha input ' + captchaInput + ' | Actual value :' + captcha.value);
 	
 	if (captchaInput == captcha.value) {
@@ -34,15 +35,47 @@ router.post('/login',(req,res,next)=>{
 		var to = 500;
 		const randTimeMS = Math.floor(Math.random() * (to - from) + from);
 		console.log("...waiting a random time between " + from + " and " + to + "..." + randTimeMS);
-		setTimeout(function(){
-			console.log('after');
-			passport.authenticate('local',{
-			successRedirect : '/dashboard',
-			failureRedirect: '/users/login',
-			failureFlash : true
-		})
-		(req,res,next);
-		},randTimeMS);
+		
+		async function authenticateQRSecretLogin(){
+			console.log("Looking for user")
+			const userquery = await User.findOne({ 'email': req.body.email }, 'secret').exec();
+			console.log("Looking for done")
+			var qrSecret = userquery.secret;
+			console.log("qrSecret: %s", qrSecret)
+			
+			if (!qrSecret) {
+				console.log("death")
+				var errors = [];
+				errors.push({msg : "No email or 2FA detect, please make a new account."});
+
+				res.render('login', {
+					errors : errors,
+					captchaSource: captcha.image
+				});
+				return;
+			}
+			
+			if (authenticator.check(req.body.twoFAcode, qrSecret)) {
+				setTimeout(function(){
+					console.log('after');
+					passport.authenticate('local',{
+					successRedirect : '/dashboard',
+					failureRedirect: '/users/login',
+					failureFlash : true
+				})
+				(req,res,next);
+				},randTimeMS);
+			} else {
+				var errors = [];
+				errors.push({msg : "Two-factor code incorrect, please try again"});
+				res.render('login', {
+					errors : errors,
+					captchaSource: captcha.image
+				});
+			}
+		}
+		
+		authenticateQRSecretLogin()
 	} else {
 		var errors = [];
 		
@@ -56,7 +89,6 @@ router.post('/login',(req,res,next)=>{
 	};
 	
 });
-
 
 
 // Logout
