@@ -16,10 +16,10 @@ router.get('/update-post',ensureAuthenticated,services.update_post);
 
 //API
 
-router.post('/api/posts',controller.create);
+router.post('/api/posts',ensureAuthenticated,controller.create);
 router.get('/api/posts',controller.find);
-router.put('/api/posts/:id',controller.update);
-router.delete('/api/posts/:id',controller.delete);
+router.put('/api/posts/:id',ensureAuthenticated,controller.update);
+router.delete('/api/posts/:id',ensureAuthenticated,controller.delete);
 
 
 
