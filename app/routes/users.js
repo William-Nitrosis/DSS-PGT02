@@ -6,10 +6,9 @@ const passport = require('passport');
 const { authenticator } = require('otplib')
 const QRCode = require('qrcode')
 var captchaLib = require("nodejs-captcha");
-var captchaValue = null;
 var validator = require('validator');
 
-
+var captcha = captchaLib();
 
 // Login handle
 router.get('/login',(req,res)=>{
@@ -21,73 +20,74 @@ router.get('/login',(req,res)=>{
 });
 
 // Login post handle
-router.post('/login',(req,res,next)=>{
+router.post('/login', async (req,res,next)=>{
 	var {captchaInput} = req.body;
 	captchaInput = validator.escape(captchaInput);
-	req.body.email = validator.escape(req.body.email);
+	req.body.email = validator.normalizeEmail(req.body.email);
 	req.body.password = validator.escape(req.body.password);
 	req.body.twoFAcode = validator.escape(req.body.twoFAcode);
 	console.log('Captcha input ' + captchaInput + ' | Actual value :' + captcha.value);
 	
-	if (captchaInput == captcha.value) {
-		//waitRandTimeFromToMS(50, 500);
-		var from = 50;
-		var to = 500;
-		const randTimeMS = Math.floor(Math.random() * (to - from) + from);
-		console.log("...waiting a random time between " + from + " and " + to + "..." + randTimeMS);
-		
-		async function authenticateQRSecretLogin(){
-			console.log("Looking for user")
-			const userquery = await User.findOne({ 'email': req.body.email }, 'secret').exec();
-			console.log("Looking for done")
-			var qrSecret = userquery.secret;
-			console.log("qrSecret: %s", qrSecret)
-			
-			if (!qrSecret) {
-				console.log("death")
-				var errors = [];
-				errors.push({msg : "No email or 2FA detect, please make a new account."});
+	var errors = [];
 
-				res.render('login', {
-					errors : errors,
-					captchaSource: captcha.image
-				});
-				return;
-			}
-			
-			if (authenticator.check(req.body.twoFAcode, qrSecret)) {
-				setTimeout(function(){
-					console.log('after');
-					passport.authenticate('local',{
-					successRedirect : '/dashboard',
-					failureRedirect: '/users/login',
-					failureFlash : true
-				})
-				(req,res,next);
-				},randTimeMS);
-			} else {
-				var errors = [];
-				errors.push({msg : "Two-factor code incorrect, please try again"});
-				res.render('login', {
-					errors : errors,
-					captchaSource: captcha.image
-				});
-			}
-		}
-		
-		authenticateQRSecretLogin()
-	} else {
-		var errors = [];
-		
+	// error if captcha incorrect
+	if (captchaInput != captcha.value) {
 		errors.push({msg : "Captcha incorrect, please try again."});
-		regenerateCaptcha();
+	}
 
-		res.render('login', {
-			errors : errors,
-			captchaSource: captcha.image
-		});
-	};
+	// error if email or 2fa failed
+	const userquery = await User.findOne({ 'email': req.body.email }, 'secret').exec();
+	if(userquery){
+		var qrSecret = userquery.secret;
+		console.log("qrSecret: %s", qrSecret)
+			// error if 2fa failed
+		if (!qrSecret) {
+			errors.push({msg : "No 2FA, please make a new account."});
+		}
+		if (!authenticator.check(req.body.twoFAcode, qrSecret)) {
+			errors.push({msg : "Two-factor code incorrect, please try again"});
+		}
+	}
+	else{
+		errors.push({msg : "No email found in db"});
+	}
 	
+	// calc random response time for fuzzing
+	var from = 50;
+	var to = 500;
+	const randTimeMS = Math.floor(Math.random() * (to - from) + from);
+	console.log("...waiting a random time between " + from + " and " + to + "..." + randTimeMS);
+
+
+	// wait random time before returning from authentication
+	setTimeout(function(){
+		// check if no errors
+		if(errors.length === 0) {
+			// validation passed
+
+			
+
+				passport.authenticate('local',{
+				successRedirect : '/dashboard',
+				failureRedirect: '/users/login',
+				failureFlash : true
+			})
+			(req,res,next);
+
+		} else {
+			// validation failed
+			console.log(errors);
+			errors = []
+			errors.push({msg: 'An Error occurred with your login.'});
+
+			regenerateCaptcha();
+
+			res.render('login', {
+				errors: errors,
+				captchaSource: captcha.image
+			});
+		}	
+	},randTimeMS);
 });
 
 
