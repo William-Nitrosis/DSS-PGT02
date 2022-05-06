@@ -11,7 +11,7 @@ const app = express();
 const connectDB = require('./app/database/connection');
 
 //env config
-dotenv.config( { path :'config.env'} )
+dotenv.config({ path: 'config.env' })
 const PORT = process.env.PORT || 8080
 
 //passport config:
@@ -24,40 +24,40 @@ app.use(morgan('tiny'));
 connectDB();
 
 //EJS
-app.set('view engine','ejs');
+app.set('view engine', 'ejs');
 app.use(expressEjsLayout);
 
 //BodyParser
-app.use(express.urlencoded({extended : true}));
+app.use(express.urlencoded({ extended: true }));
 
 //express session
 app.use(session({
-    secret : 'secret',
-    resave : true,
-    saveUninitialized : true
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-app.use((req,res,next)=> {
+app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
-    res.locals.error  = req.flash('error');
-    res.header('Access-Control-Allow-Origin', 'http://localhost:'+PORT);
+    res.locals.error = req.flash('error');
+    res.header('Access-Control-Allow-Origin', 'http://localhost:' + PORT);
     next();
-    });
+});
 
 
 //load assets
-app.use('/CSS',express.static(path.resolve(__dirname,"assets/CSS")))
-app.use('/img',express.static(path.resolve(__dirname,"assets/img")))
-app.use('/js',express.static(path.resolve(__dirname,"assets/js")))
+app.use('/CSS', express.static(path.resolve(__dirname, "assets/CSS")))
+app.use('/img', express.static(path.resolve(__dirname, "assets/img")))
+app.use('/js', express.static(path.resolve(__dirname, "assets/js")))
 
 //Routes
-app.use('/',require('./app/routes/index'));
-app.use('/users',require('./app/routes/users'));
-app.use('/posts',require('./app/routes/posts'));
+app.use('/', require('./app/routes/index'));
+app.use('/users', require('./app/routes/users'));
+app.use('/posts', require('./app/routes/posts'));
 
 
-app.listen(PORT, ()=> { console.log(`Server is running on http://localhost:${PORT}`)});
+app.listen(PORT, () => { console.log(`Server is running on http://localhost:${PORT}`) });

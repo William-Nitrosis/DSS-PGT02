@@ -21,20 +21,18 @@ $("#update_post").submit(function (event) {
     $.ajax(request).done(function (response) {
         alert("Data Updated Successfully!");
     })
-
 })
 
-function deletefunction(ids){   
-
+function deletefunction(ids) {
     var request = {
-        "url" : `http://localhost:3000/posts/api/posts/${ids}`,
-        "method" : "DELETE"
+        "url": `http://localhost:3000/posts/api/posts/${ids}`,
+        "method": "DELETE"
     }
-    if(confirm("Do you really want to delete this record?")){
-        $.ajax(request).done(function(response){
+
+    if (confirm("Do you really want to delete this record?")) {
+        $.ajax(request).done(function (response) {
             alert("Data Deleted Successfully!");
             location.reload();
         })
     }
-} 
-
+}
