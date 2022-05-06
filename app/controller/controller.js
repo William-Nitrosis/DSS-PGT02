@@ -35,7 +35,7 @@ exports.create = (req,res)=>{
 // retrieve and return all posts/ retrive and return a single post
 exports.find = (req, res)=>{
     if(req.query.id){
-        const id = req.query.id;
+        const id = validator.escape(req.query.id);
 
         Post.findById(id)
             .then(data =>{
@@ -46,6 +46,7 @@ exports.find = (req, res)=>{
                 }
             })
             .catch(err =>{
+                console.log(err);
                 res.status(500).send({ message: "Erro retrieving post with id " + id})
             })
 
@@ -94,7 +95,7 @@ exports.update = async (req, res)=>{
             });
     }else{
         console.log("IDs are not equal. Expected:"+post.userid+" Recieved:"+req.user.id);
-        res.status(500).send({ message : "Error Update post information"});
+        res.status(403).send({ message : "Error Update post information"});
     }
 }
 
@@ -120,6 +121,7 @@ exports.delete = async (req, res)=>{
                 }
             })
             .catch(err =>{
+                console.log(err);
                 res.status(500).send({message: "Could not delete Post with id=" + id});
             });
     }else{
