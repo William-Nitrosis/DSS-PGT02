@@ -1,80 +1,78 @@
-
 body {
-    background-color: #2d93e7;
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: bolder;
+  background-color: #2d93e7;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: bolder;
 }
-.form-group
-{
-  
+
+.form-group {
+
   margin-top: 1.5cm;
   margin-bottom: 1.5cm;
   padding-top: 0.5cm;
   font-size: 20px;
-
-
-text-align: center;
+  text-align: center;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-.btn-warning
-{
+.btn-warning {
   font-size: large;
-    font-weight: bolder;
-    color: rgb(20, 20, 18);
+  font-weight: bolder;
+  color: rgb(20, 20, 18);
 }
+
 .btn-success {
-    color: rgb(20, 20, 18);
-    background-color: #5cb85c;
-    border-color: #4cae4c;
-    font-size: large;
-    font-weight: bolder;
+  color: rgb(20, 20, 18);
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+  font-size: large;
+  font-weight: bolder;
 }
 
 
-h1
-{
-    color: rgb(11, 12, 12);
-    font-weight: bolder;
-    align-items: center;
-    text-align: center;
-    margin-bottom: 1cm;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+h1 {
+  color: rgb(11, 12, 12);
+  font-weight: bolder;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1cm;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
+
 ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-  }
-  
-  li {
-    float: left;
-  }
-  
-  li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-  }
-  
-  li a:hover:not(.active) {
-    background-color: #111;
-  }
-  
-  .active {
-    background-color: #cecb0e;
-    color: #050007;
-    font-weight: bolder;
-  }
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  background-color: #cecb0e;
+  color: #050007;
+  font-weight: bolder;
+}
+
 .main {
-    background-color: #fafafa;
-    width: 400px;
-    height: 400px;
-    margin: 7em auto;
- font-weight: bolder;
-    box-shadow: 0px 11px 35px 2px rgba(182, 49, 49, 0.14);
+  background-color: #fafafa;
+  width: 400px;
+  height: 400px;
+  margin: 7em auto;
+  font-weight: bolder;
+  box-shadow: 0px 11px 35px 2px rgba(182, 49, 49, 0.14);
 }

@@ -1,16 +1,17 @@
 <% if(typeof errors!= 'undefined') { %>
-<%    errors.forEach(function(error){ %>
+    <% errors.forEach(function(error){ %>
         <p> <%= error.msg %></p>
-<%    })        %>
+    <% }) %>
 <% } %>
 
 <% if(success_msg!= '') { %>
-        <p><%=success_msg %> </p>
-      <% } %>
+    <p><%=success_msg %> </p>
+<% } %>
 
 <% if(error_msg != '') { %>
-      <p><%= error_msg %></p> 
-      <% } %> 
+    <p><%= error_msg %></p> 
+<% } %> 
+
 <% if(error != '') { %>
-       <p><%= error %> </p>
-      <% } %> 
+    <p><%= error %> </p>
+<% } %> 
