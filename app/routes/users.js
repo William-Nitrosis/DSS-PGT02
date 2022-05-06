@@ -11,7 +11,7 @@ var validator = require('validator');
 var captcha = captchaLib();
 
 // Login handle
-router.get('/login',(req,res)=>{
+router.get('/login',(req,res) => {
 	regenerateCaptcha();
 
     res.render('login', {
@@ -20,7 +20,7 @@ router.get('/login',(req,res)=>{
 });
 
 // Login post handle
-router.post('/login', async (req,res,next)=>{
+router.post('/login', async (req,res,next) => {
 	var {captchaInput} = req.body;
 	captchaInput = validator.escape(captchaInput);
 	req.body.email = validator.normalizeEmail(req.body.email);
@@ -37,19 +37,21 @@ router.post('/login', async (req,res,next)=>{
 
 	// error if email or 2fa failed
 	const userquery = await User.findOne({ 'email': req.body.email }, 'secret').exec();
-	if(userquery){
+	if(!userquery) {
+		errors.push({msg : "No email found in db"});
+	} else {
 		var qrSecret = userquery.secret;
-		console.log("qrSecret: %s", qrSecret)
-			// error if 2fa failed
+		console.log("qrSecret: %s", qrSecret);
+
+		// error if 2fa doesn't exist
 		if (!qrSecret) {
 			errors.push({msg : "No 2FA, please make a new account."});
 		}
+		
+		// error if 2fa is incorrect
 		if (!authenticator.check(req.body.twoFAcode, qrSecret)) {
 			errors.push({msg : "Two-factor code incorrect, please try again"});
 		}
-	}
-	else{
-		errors.push({msg : "No email found in db"});
 	}
 	
 	// calc random response time for fuzzing
@@ -58,22 +60,17 @@ router.post('/login', async (req,res,next)=>{
 	const randTimeMS = Math.floor(Math.random() * (to - from) + from);
 	console.log("...waiting a random time between " + from + " and " + to + "..." + randTimeMS);
 
-
 	// wait random time before returning from authentication
-	setTimeout(function(){
+	setTimeout(function() {
 		// check if no errors
 		if(errors.length === 0) {
 			// validation passed
-
-			
-
-				passport.authenticate('local',{
+			passport.authenticate('local',{
 				successRedirect : '/dashboard',
 				failureRedirect: '/users/login',
 				failureFlash : true
 			})
 			(req,res,next);
-
 		} else {
 			// validation failed
 			console.log(errors);
@@ -160,7 +157,7 @@ router.get('/sign-up-2fa', (req, res)=>{
 });
 
 // Register 2FA post handle
-router.post('/sign-up-2fa', (req, res)=>{
+router.post('/sign-up-2fa', async (req, res)=>{
     req.session.email = validator.normalizeEmail(req.session.email);
 	if (!req.session.email) {
 		return res.redirect('/')
@@ -172,20 +169,19 @@ router.post('/sign-up-2fa', (req, res)=>{
 	console.log(code)
 	console.log(sessionEmail)
 	
-	async function authenticateQRSecret(){
-		const userquery = await User.findOne({ 'email': sessionEmail }, 'secret').exec();
+	const userquery = await User.findOne({ 'email': sessionEmail }, 'secret').exec();
+	if(!userquery) {
+		errors.push({msg : "No email found in db"});
+	} else {
 		var qrSecret = userquery.secret;
-		console.log('%s', qrSecret);
-		
+		console.log('qrSecret: %s', qrSecret);
+
 		if (authenticator.check(code, qrSecret)) {
 			res.redirect('/users/login');
 		} else {
 			res.redirect('/users/sign-up-2fa');
-		}
+		}	
 	}
-
-	authenticateQRSecret();
-	
 });
 
 
@@ -215,8 +211,7 @@ async function trySaveUsertoDB(email, errors, name, password, req, res, password
 		// hash password
 		bcrypt.genSalt(10, (err, salt) => bcrypt.hash(newUser.password, salt,
 			(err, hash) => {
-				if (err)
-					throw err;
+				if (err) throw err;
 
 				// save password as hash
 				newUser.password = hash;
