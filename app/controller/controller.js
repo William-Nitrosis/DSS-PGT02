@@ -24,22 +24,18 @@ exports.create = (req,res)=>{
     post
         .save(post)
         .then(data => {
-            //res.send(data)
             res.redirect('/posts');
         })
         .catch(err =>{
-            res.status(500).send({
-                message : err.message || "Some error occurred while creating a create operation"
-            });
+            res.status(500).send({message : err.message || "Some error occurred while creating a create operation"});
         });
 
 }
 
 // retrieve and return all posts/ retrive and return a single post
 exports.find = (req, res)=>{
-    console.log("hi find"+req.user);
     if(req.query.id){
-        const id = req.query.id;
+        const id = validator.escape(req.query.id);
 
         Post.findById(id)
             .then(data =>{
@@ -50,6 +46,7 @@ exports.find = (req, res)=>{
                 }
             })
             .catch(err =>{
+                console.log(err);
                 res.status(500).send({ message: "Erro retrieving post with id " + id})
             })
 
@@ -79,7 +76,6 @@ exports.update = async (req, res)=>{
     const id = validator.escape(req.params.id);
 
     console.log("trying to update id: "+id);
-    console.log(req.body.post);
 
     // find update post content
     const post = await Post.findById(id).exec();
@@ -87,22 +83,19 @@ exports.update = async (req, res)=>{
 
     // only allow post update when the current user is the same as the post owner
     if(post.userid === req.user.id){
-        console.log("IDs are equal")
-
         // save updated post to db
         post.save()
             .then((data) => {
                 console.log("Saved to db: " + data);
-                // req.flash('success_msg', 'You have now registered!');
                 res.send(data);
             })
             .catch(err =>{
-                console.log(err)
-                res.status(500).send({ message : "Error Update post information"})
+                console.log(err);
+                res.status(500).send({ message : "Error Update post information"});
             });
     }else{
-        console.log("IDs are not equal")
-        res.status(500).send({ message : "Error Update post information"})
+        console.log("IDs are not equal. Expected:"+post.userid+" Recieved:"+req.user.id);
+        res.status(403).send({ message : "Error Update post information"});
     }
 }
 
@@ -119,8 +112,6 @@ exports.delete = async (req, res)=>{
 
     // only allow post deletion when the current user is the same as the post owner
     if(post.userid === req.user.id){
-        console.log("IDs are equal")
-
         Post.findByIdAndDelete(id)
             .then(data => {
                 if(!data){
@@ -130,10 +121,11 @@ exports.delete = async (req, res)=>{
                 }
             })
             .catch(err =>{
+                console.log(err);
                 res.status(500).send({message: "Could not delete Post with id=" + id});
             });
     }else{
-        console.log("IDs are not equal");
+        console.log("IDs are not equal. Expected:"+post.userid+" Recieved:"+req.user.id);
         res.status(403).send({ message : "Error deleting post"});
     }
 }

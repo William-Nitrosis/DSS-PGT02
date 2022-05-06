@@ -5,7 +5,6 @@ const services = require('../services/render');
 const controller = require('../controller/controller');
 const {ensureAuthenticated} = require('../services/authentication');
 
-//router.all('/api/posts',ensureAuthenticated);
 
 router.get('/',ensureAuthenticated,services.posts);
 
