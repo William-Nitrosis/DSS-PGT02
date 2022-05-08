@@ -1,56 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign up</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sign up</title>
 	<style>
 		body {
 			background-color: #050007;
 			font-family: 'Ubuntu', sans-serif;
 		}
-		h1
-		{
+
+		h1 {
 			color: rgb(10, 231, 220);
 			align-items: center;
 			text-align: center;
 			margin-bottom: 1cm;
 			font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 		}
+
 		ul {
 			list-style-type: none;
 			margin: 0;
 			padding: 0;
 			overflow: hidden;
 			background-color: #333;
-		  }
-		  
-		  li {
+		}
+
+		li {
 			float: left;
-		  }
-		  
-		  li a {
+		}
+
+		li a {
 			display: block;
 			color: white;
 			text-align: center;
 			padding: 14px 16px;
 			text-decoration: none;
-		  }
-		  
-		  li a:hover:not(.active) {
+		}
+
+		li a:hover:not(.active) {
 			background-color: #111;
-		  }
-		  
-		  .active {
+		}
+
+		.active {
 			background-color: #cecb0e;
 			color: #050007;
 			font-weight: bolder;
-		  }
+		}
+
 		.main {
 			background-color: #FFFFFF;
 			width: 500px;
-			height: 570px;
+			height: 770px;
 			margin: 7em auto;
 			border-radius: 1.5em;
 			box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
@@ -67,89 +70,84 @@
 		}
 
 		.un {
-		width: 76%;
-		color: rgb(38, 50, 56);
-		background: rgba(136, 126, 126, 0.04);
-		border: 2px solid rgba(0, 0, 0, 0.02);
-		font-weight: 700;
-		font-size: 14px;
-		letter-spacing: 1px;
-
-		padding: 10px 20px;
-		border: none;
-		border-radius: 20px;
-		outline: none;
-		box-sizing: border-box;
-
-		margin-bottom: 1px;
-		margin-top: 1px;
-		margin-left: 46px;
-		text-align: center;
-		margin-bottom: 27px;
-		font-family: 'Ubuntu', sans-serif;
+			width: 76%;
+			color: rgb(38, 50, 56);
+			background: rgba(136, 126, 126, 0.04);
+			border: 2px solid rgba(0, 0, 0, 0.02);
+			font-weight: 700;
+			font-size: 14px;
+			letter-spacing: 1px;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 20px;
+			outline: none;
+			box-sizing: border-box;
+			margin-bottom: 1px;
+			margin-top: 1px;
+			margin-left: 46px;
+			text-align: center;
+			margin-bottom: 27px;
+			font-family: 'Ubuntu', sans-serif;
 		}
-
 
 		.pass {
-				width: 76%;
-		color: rgb(38, 50, 56);
-		background: rgba(136, 126, 126, 0.04);
-		border: 2px solid rgba(0, 0, 0, 0.02);
-		font-weight: 700;
-		font-size: 14px;
-		letter-spacing: 1px;
-
-		padding: 10px 20px;
-		border: none;
-		border-radius: 20px;
-		outline: none;
-		box-sizing: border-box;
-
-		margin-bottom: 50px;
-		margin-left: 46px;
-		text-align: center;
-		margin-bottom: 27px;
-		font-family: 'Ubuntu', sans-serif;
+			width: 76%;
+			color: rgb(38, 50, 56);
+			background: rgba(136, 126, 126, 0.04);
+			border: 2px solid rgba(0, 0, 0, 0.02);
+			font-weight: 700;
+			font-size: 14px;
+			letter-spacing: 1px;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 20px;
+			outline: none;
+			box-sizing: border-box;
+			margin-bottom: 50px;
+			margin-left: 46px;
+			text-align: center;
+			margin-bottom: 27px;
+			font-family: 'Ubuntu', sans-serif;
 		}
 
-
-		.un:focus, .pass:focus {
+		.un:focus,
+		.pass:focus {
 			border: 2px solid rgba(0, 0, 0, 0.18) !important;
-			
 		}
 
 		.signin {
 			cursor: pointer;
 			background-color: #15cce4;
-			  border-radius: 5em;
-			  color: rgb(12, 11, 11);
-			  font-weight: bolder;
-			  border: 0;
-			  padding-left: 40px;
-			  padding-right: 40px;
-			  padding-bottom: 10px;
-			  padding-top: 10px;
-			  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-			 margin-left: 17.5%;
-			  font-size: 16px;
-			  box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
-		  }
-		  .signup {
-			  cursor: pointer;
-				border-radius: 5em;
-				color: #fff;
-				background: linear-gradient(to right, #9C27B0, #E040FB);
-				border: 0;
-				padding-left: 40px;
-				padding-right: 40px;
-				padding-bottom: 10px;
-				padding-top: 10px;
-		  
-				font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-		  margin-left: 10%;
-				font-size: 16px;
-				box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
-			}
+			border-radius: 5em;
+			color: rgb(12, 11, 11);
+			font-weight: bolder;
+			border: 0;
+			padding-left: 40px;
+			padding-right: 40px;
+			padding-bottom: 10px;
+			padding-top: 10px;
+			font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+			margin-left: 17.5%;
+			font-size: 16px;
+			box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+		}
+
+		.signup {
+			cursor: pointer;
+			border-radius: 5em;
+			color: #fff;
+			background: linear-gradient(to right, #9C27B0, #E040FB);
+			border: 0;
+			padding-left: 40px;
+			padding-right: 40px;
+			padding-bottom: 10px;
+			padding-top: 10px;
+			font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+			margin-left: 10%;
+			font-size: 16px;
+			box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+		}
+
 		.forgot {
 			text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
 			color: #E1BEE7;
@@ -169,30 +167,39 @@
 		}
 	</style>
 </head>
+
 <body>
 	<ul>
-		<li style="float:right"><a class="active" href="#about">Login Page</a></li>
+		<li style="float:right"><a class="active" href="/users/login">Login Page</a></li>
+		<li style="float:left"><a class="active" href="/users/logout">Logout</a></li>
 	</ul>
-	
+
 	<h1>Secure Authentication System</h1>
-	
-	
+
+
 	<div class="main">
 		<p class="sign" align="center">Create an account</p>
-		<div align="center"><%- include ('./partials/messages') %></div>
-		
+		<div align="center">
+			<%- include ('./partials/messages') %>
+		</div>
+
 		<form class="form1" action="/users/register" method="POST">
-			<input class="un " type="name" align="center" name="name" placeholder="Enter Name" value="<%= typeof name != 'undefined' ? name : '' %>" />
-			<input class= "un" type="email" align="center" name="email" placeholder="Enter Email" value="<%= typeof email != 'undefined' ? email : '' %>" />
-			<input class="pass" type="password" align="center" name="password" placeholder="Create Password" value="<%= typeof password != 'undefined' ? password : '' %>" />
-			<input class="pass" type="password" align="center" name="password2" placeholder="Confirm Password" value="<%= typeof password2 != 'undefined' ? password2 : '' %>" />
+			<input class="un " type="name" align="center" name="name" placeholder="Enter Name"
+				value="<%= typeof name != 'undefined' ? name : '' %>" />
+			<input class="un" type="email" align="center" name="email" placeholder="Enter Email"
+				value="<%= typeof email != 'undefined' ? email : '' %>" />
+			<input class="pass" type="password" align="center" name="password" placeholder="Create Password"
+				value="<%= typeof password != 'undefined' ? password : '' %>" />
+			<input class="pass" type="password" align="center" name="password2" placeholder="Confirm Password"
+				value="<%= typeof password2 != 'undefined' ? password2 : '' %>" />
 			<p align="center"><img src="<%= captchaSource %>" /></p>
-			<input class="un " type="captcha" align="center" name="captchaInput" placeholder="Enter captcha"/>
-			
-			
+			<input class="un " type="captcha" align="center" name="captchaInput" placeholder="Enter captcha" />
+
+
 			<button type="submit" class="signup" align="center"> Register </button>
 			<a href="/users/login" class="signin" align="center">Have an account?</a>
 		</form>
 	</div>
 </body>
+
 </html>
