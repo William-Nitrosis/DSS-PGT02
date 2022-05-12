@@ -32,10 +32,19 @@ app.use(express.urlencoded({ extended: true }));
 
 //express session
 app.use(session({
-    secret: 'secret',
+    secret: 'secret', // secret string used in the signing of the session ID that is stored in the cookie
+    name: 'DSSid', // set a unique name to remove the default connect.sid
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true, // minimize risk of XSS attacks by restricting the client from reading the cookie
+        secure: false, // only send cookie over https (cant set to on without certificate)
+        sameSite: 'lax',
+        maxAge: 60000*60*24 // set cookie expiry length in ms (24hr)
+    }
 }));
+
+app.disable('x-powered-by'); // hides what the app is powered by in the header
 
 app.use(passport.initialize());
 app.use(passport.session());
