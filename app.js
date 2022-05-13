@@ -40,7 +40,7 @@ app.use(session({
         httpOnly: true, // minimize risk of XSS attacks by restricting the client from reading the cookie
         secure: false, // only send cookie over https (cant set to on without certificate)
         sameSite: 'lax',
-        maxAge: 60000*60*24 // set cookie expiry length in ms (24hr)
+        maxAge: 60000*60*4 // set cookie expiry length in ms
     }
 }));
 
