@@ -68,5 +68,8 @@ app.use('/', require('./app/routes/index'));
 app.use('/users', require('./app/routes/users'));
 app.use('/posts', require('./app/routes/posts'));
 
+var server = app.listen(PORT, () => { console.log(`Server is running on http://localhost:${PORT}`) });
 
-app.listen(PORT, () => { console.log(`Server is running on http://localhost:${PORT}`) });
+server.on( 'close', () => console.log('Closing') );
+
+module.exports = app; 
