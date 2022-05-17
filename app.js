@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //express session
 app.use(session({
-    secret: 'secret', // secret string used in the signing of the session ID that is stored in the cookie
+    secret: 'ASd8ASDIK"£H"£*&DKAasdasd23d1f4', // secret string used in the signing of the session ID that is stored in the cookie
     name: 'DSSid', // set a unique name to remove the default connect.sid
     resave: true,
     saveUninitialized: true,
