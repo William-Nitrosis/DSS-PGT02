@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const { authenticator } = require('otplib')
 const QRCode = require('qrcode')
+const joi = require('joi')
+
 var captchaLib = require("nodejs-captcha");
 var validator = require('validator');
 
@@ -131,9 +133,22 @@ router.post('/register', async (req, res) => {
 		errors.push({ msg: "passwords dont match" });
 	}
 
-	// error if password is less than 6 characters
-	if (password.length < 6) {
-		errors.push({ msg: 'password atleast 6 characters' });
+	// error if password is less than 8 characters
+	if (password.length < 8) {
+		errors.push({ msg: 'password atleast 8 characters' });
+	}
+
+	// password pattern checking
+	const regexForPwd = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+	const stringPassswordError = new Error("Password must be strong. At least one upper case alphabet. At least one lower case alphabet. At least one digit. At least one special character. Minimum eight in length")
+
+	const schema = joi.object().keys({
+		isValidpassword: joi.string().regex(regexForPwd).error(stringPassswordError).required()
+	});
+
+	const notValid = schema.validate({isValidpassword: password}).error;
+	if(notValid){
+		errors.push({msg: notValid.message});
 	}
 
 	// error if captcha is incorrect
